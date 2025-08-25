@@ -1,4 +1,5 @@
-﻿using ServiceHub.Domain.ValueObjects;
+﻿using Microsoft.AspNetCore.Identity;
+using ServiceHub.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ServiceHub.Domain.Entities.Identity;
 
-public class ApplicationUser
+public class ApplicationUser : IdentityUser<Guid>
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }
