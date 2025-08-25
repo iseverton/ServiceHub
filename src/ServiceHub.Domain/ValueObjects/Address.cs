@@ -27,4 +27,7 @@ public record class Address
         ZipCode = zipCode;
         Country = country;
     }
+    public Address()
+    {
+    }
 }

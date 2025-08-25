@@ -5,6 +5,7 @@ using ServiceHub.Domain.Entities.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,6 +24,12 @@ public class ServiceHubDbContext : IdentityDbContext<ApplicationUser, Applicatio
     public DbSet<ServiceReview> ServiceReviews { get; set; }
     public DbSet<CustomServiceRequest> CustomServiceRequests { get; set; }
     public DbSet<Booking> Bookings { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
 
 
 

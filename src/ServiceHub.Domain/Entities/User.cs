@@ -8,15 +8,21 @@ using System.Threading.Tasks;
 
 namespace ServiceHub.Domain.Entities;
 
-public class User : ApplicationUser
+public class User
 {
+    public Guid Id { get; set; }
+    public Guid ApplicationUserId { get; set; }
+    public ApplicationUser ApplicationUser { get; set; }
     public ICollection<CustomServiceRequest> CustomServices { get; set; }
-    public ICollection<ServiceReview>? ServiceReviewss { get; set; }
+    public ICollection<ServiceReview>? ServiceReviews { get; set; }
     
 
     public User(string firstName, string lastName, Address address)
-        : base(firstName, lastName, address)
     {
         CustomServices = new List<CustomServiceRequest>();
+    }
+
+    public User()
+    {
     }
 }

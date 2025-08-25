@@ -10,7 +10,6 @@ namespace ServiceHub.Domain.Entities.Identity;
 
 public class ApplicationUser : IdentityUser<Guid>
 {
-    public Guid Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public Address Address { get; set; }
@@ -24,5 +23,8 @@ public class ApplicationUser : IdentityUser<Guid>
         LastName = lastName;
         Address = address;
         CreatedAt = DateTime.UtcNow;
+    }
+    public ApplicationUser()
+    {
     }
 }

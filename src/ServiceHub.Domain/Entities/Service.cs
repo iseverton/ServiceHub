@@ -32,4 +32,9 @@ public class Service
         Categories = new List<ServiceCategory>();
         Status = status;
     }
+
+    public Service()
+    {
+        
+    }
 }

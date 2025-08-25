@@ -52,7 +52,7 @@ internal class ServiceReviewConfiguration : IEntityTypeConfiguration<ServiceRevi
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(sr => sr.User)
-            .WithMany(u => u.ServiceReviewss)
+            .WithMany(u => u.ServiceReviews)
             .HasForeignKey(sr => sr.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 

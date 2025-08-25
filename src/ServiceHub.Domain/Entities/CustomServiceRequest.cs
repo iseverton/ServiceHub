@@ -32,4 +32,7 @@ public class CustomServiceRequest
         Status = status;
         CreatedAt = DateTime.UtcNow;
     }
+    public CustomServiceRequest()
+    {
+    }
 }

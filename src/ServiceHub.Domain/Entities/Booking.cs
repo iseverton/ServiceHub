@@ -33,4 +33,8 @@ public class Booking
         Status = status;
         CreatedAt = DateTime.UtcNow;
     }
+
+    public Booking()
+    {
+    }
 }

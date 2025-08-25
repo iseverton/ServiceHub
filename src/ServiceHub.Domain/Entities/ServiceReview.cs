@@ -36,5 +36,9 @@ public class ServiceReview
         CreatedAt = DateTime.UtcNow;
     }
 
+    public ServiceReview()
+    {
+    }
+
 
 }

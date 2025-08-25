@@ -15,18 +15,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.ToTable("user");
         builder.HasKey(u => u.Id);
-        
-        builder.Property(u => u.FirstName)
-            .IsRequired()
-            .HasColumnType("nvarchar")
-            .HasColumnName("first_name")
-            .HasMaxLength(100);
-
-        builder.Property(u => u.LastName)
-            .IsRequired()
-            .HasColumnType("nvarchar")
-            .HasColumnName("last_name")
-            .HasMaxLength(100);
 
         builder.Property(u => u.Id)
             .HasColumnType("uniqueidentifier")
@@ -34,69 +22,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.Property(u => u.CreatedAt)
-            .IsRequired()
-            .HasColumnType("datetime")
-            .HasColumnName("created_at");
+        builder.HasOne(u => u.ApplicationUser)
+            .WithOne()
+            .HasForeignKey<User>(u => u.ApplicationUserId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .HasConstraintName("FK_User_ApplicationUser");
 
 
-        builder.Property(u => u.LastUpdatedAt)
-            .IsRequired()
-            .HasColumnType("datetime")
-            .HasColumnName("last_updated_at");
 
-        
-         builder.OwnsOne(u => u.Address, a =>
-        {
-            a.Property(ad => ad.Street)
-                .IsRequired()
-                .HasColumnType("nvarchar")
-                .HasMaxLength(200)
-                .HasColumnName("street");
-            
-            a.Property(ad => ad.City)
-                .IsRequired()
-                .HasColumnType("nvarchar")
-                .HasMaxLength(100)
-                .HasColumnName("city");
-            
-            a.Property(ad => ad.State)
-            .IsRequired()
-            .HasColumnType("nvarchar")
-            .HasMaxLength(100)
-            .HasColumnName("state");
-            
-            a.Property(ad => ad.ZipCode)
-                .IsRequired()
-                .HasColumnType("nvarchar")
-                .HasMaxLength(20)
-                .HasColumnName("zip_code");
-
-            a.Property(ad => ad.Country)
-                .IsRequired()
-                .HasColumnType("nvarchar")
-                .HasMaxLength(100)
-                .HasColumnName("country");
-
-            a.Property(ad => ad.Number)
-            .IsRequired()
-            .HasColumnType("int")
-            .HasMaxLength(20)
-            .HasColumnName("number");
-
-            a.Property(ad => ad.Neighborhood)
-                .IsRequired()
-                .HasColumnType("nvarchar")
-                .HasMaxLength(100)
-                .HasColumnName("neighborhood");
-           
-            a.Property(ad => ad.Complement)
-            .IsRequired()
-            .HasColumnType("nvarchar")
-            .HasMaxLength(100)
-            .HasColumnName("complement");
-
-        });
 
         builder.HasMany(u => u.CustomServices)
             .WithOne(c => c.User)
