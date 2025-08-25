@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36327.8 d17.14
+VisualStudioVersion = 17.14.36327.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -14,6 +14,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHub.Application", "src\ServiceHub.Application\ServiceHub.Application.csproj", "{7B4EEE1B-C23E-4DA8-95D1-8FD631283007}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHub.Infrastructure", "src\ServiceHub.Infrastructure\ServiceHub.Infrastructure.csproj", "{30225095-0A97-4DD4-B0FB-9B8A79F40FA8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{68E9340D-C194-4DEA-AF27-9A0CB0C4C8E5} = {68E9340D-C194-4DEA-AF27-9A0CB0C4C8E5}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHub.UnitTests", "tests\ServiceHub.UnitTests\ServiceHub.UnitTests.csproj", "{E0E00626-6B55-40E5-A62E-FC4B7F4EC338}"
 EndProject
