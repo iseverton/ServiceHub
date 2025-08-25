@@ -11,7 +11,9 @@ namespace ServiceHub.Domain.Entities;
 public class User : ApplicationUser
 {
     public ICollection<CustomServiceRequest> CustomServices { get; set; }
+    public ICollection<ServiceReview>? ServiceReviewss { get; set; }
     
+
     public User(string firstName, string lastName, Address address)
         : base(firstName, lastName, address)
     {

@@ -12,6 +12,7 @@ public class Provider : ApplicationUser
 {
     public string Description { get; set; }
     public ICollection<Service> Services { get; set; }
+    public ICollection<ServiceReview> ServiceReviews { get; set; }
 
     public Provider(string firstName, string lastName, Address address, string description)
         : base(firstName, lastName, address)

@@ -21,6 +21,7 @@ public class Booking
     public Service Service { get; set; }
     public User Client { get; set; }
     public Provider Provider { get; set; }
+    public ServiceReview ServiceReview { get; set; }
 
     public Booking(Guid serviceId, Guid clientId, Guid providerId, DateTime scheduledAt, EBookingStatus status)
     {
