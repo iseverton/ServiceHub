@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ServiceHub.Domain.Interfaces.Repositories;
 using ServiceHub.Infrastructure.Data.Repositories;
+using ServiceHub.Application.Services.Interfaces;
+using ServiceHub.Infrastructure.Services.Auth;
 
 namespace ServiceHub.Infrastructure;
 
@@ -43,8 +45,12 @@ public static class InfrastructureExtensions
         .AddEntityFrameworkStores<ServiceHubDbContext>()
         .AddDefaultTokenProviders();
 
+        // Repositories
         services.AddScoped<IUserRepository,UserRepository>();
         services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+
+        // Services
+        services.AddScoped<IAuthService,AuthService>();
 
 
         Console.WriteLine("Registrado a injecao de infra");
