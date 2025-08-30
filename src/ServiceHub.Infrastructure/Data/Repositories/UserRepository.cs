@@ -14,6 +14,4 @@ public class UserRepository : BaseRepository<User>,IUserRepository
     public UserRepository(ServiceHubDbContext context) : base(context)
     {
     }
-
-    
 }

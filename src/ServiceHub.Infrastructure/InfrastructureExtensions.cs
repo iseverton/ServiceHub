@@ -44,6 +44,7 @@ public static class InfrastructureExtensions
         .AddDefaultTokenProviders();
 
         services.AddScoped<IUserRepository,UserRepository>();
+        services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
 
         Console.WriteLine("Registrado a injecao de infra");
