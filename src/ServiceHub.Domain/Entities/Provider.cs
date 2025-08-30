@@ -18,9 +18,10 @@ public class Provider
     public ICollection<Service> Services { get; set; }
     public ICollection<ServiceReview> ServiceReviews { get; set; }
 
-    public Provider(string name, string description)
+    public Provider( ApplicationUser applicationUser,  string name, string description)
     {
         Id = Guid.NewGuid();
+        ApplicationUser = applicationUser;
         Name = name;
         Description = description;
         Services = new List<Service>();
