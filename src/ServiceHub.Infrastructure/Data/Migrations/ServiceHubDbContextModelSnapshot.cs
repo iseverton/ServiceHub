@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceHub.Infrastructure.Data;
 
 #nullable disable
 
-namespace ServiceHub.Infrastructure.Migrations
+namespace ServiceHub.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ServiceHubDbContext))]
-    [Migration("20250825212410_NomeDaMigration")]
-    partial class NomeDaMigration
+    partial class ServiceHubDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,7 +164,7 @@ namespace ServiceHub.Infrastructure.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("booking", (string)null);
+                    b.ToTable("bookings", (string)null);
                 });
 
             modelBuilder.Entity("ServiceHub.Domain.Entities.CustomServiceRequest", b =>
@@ -178,7 +175,9 @@ namespace ServiceHub.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     b.Property<decimal>("Budget")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("budget");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime")
@@ -216,7 +215,7 @@ namespace ServiceHub.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("custom_service_request", (string)null);
+                    b.ToTable("custom_service_requests", (string)null);
                 });
 
             modelBuilder.Entity("ServiceHub.Domain.Entities.Identity.ApplicationRole", b =>
@@ -271,18 +270,6 @@ namespace ServiceHub.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar")
-                        .HasColumnName("first_name");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar")
-                        .HasColumnName("last_name");
-
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("datetime")
                         .HasColumnName("last_updated_at");
@@ -330,7 +317,7 @@ namespace ServiceHub.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("application_user", (string)null);
+                    b.ToTable("application_users", (string)null);
                 });
 
             modelBuilder.Entity("ServiceHub.Domain.Entities.Provider", b =>
@@ -345,14 +332,20 @@ namespace ServiceHub.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("name");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("provider", (string)null);
+                    b.ToTable("providers", (string)null);
                 });
 
             modelBuilder.Entity("ServiceHub.Domain.Entities.Service", b =>
@@ -377,6 +370,7 @@ namespace ServiceHub.Infrastructure.Migrations
                         .HasColumnName("last_updated_at");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("price");
 
@@ -397,7 +391,7 @@ namespace ServiceHub.Infrastructure.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("service", (string)null);
+                    b.ToTable("services", (string)null);
                 });
 
             modelBuilder.Entity("ServiceHub.Domain.Entities.ServiceCategory", b =>
@@ -421,7 +415,7 @@ namespace ServiceHub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("service_category", (string)null);
+                    b.ToTable("service_categories", (string)null);
                 });
 
             modelBuilder.Entity("ServiceHub.Domain.Entities.ServiceReview", b =>
@@ -485,12 +479,17 @@ namespace ServiceHub.Infrastructure.Migrations
                     b.Property<Guid>("ApplicationUserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("name");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("user", (string)null);
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("service_serviceCategory", b =>
@@ -596,73 +595,6 @@ namespace ServiceHub.Infrastructure.Migrations
                         .HasConstraintName("FK_CustomServiceRequest_User");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ServiceHub.Domain.Entities.Identity.ApplicationUser", b =>
-                {
-                    b.OwnsOne("ServiceHub.Domain.ValueObjects.Address", "Address", b1 =>
-                        {
-                            b1.Property<Guid>("ApplicationUserId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("City")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar")
-                                .HasColumnName("city");
-
-                            b1.Property<string>("Complement")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar")
-                                .HasColumnName("complement");
-
-                            b1.Property<string>("Country")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar")
-                                .HasColumnName("country");
-
-                            b1.Property<string>("Neighborhood")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar")
-                                .HasColumnName("neighborhood");
-
-                            b1.Property<string>("Number")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar")
-                                .HasColumnName("number");
-
-                            b1.Property<string>("State")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar")
-                                .HasColumnName("state");
-
-                            b1.Property<string>("Street")
-                                .IsRequired()
-                                .HasMaxLength(200)
-                                .HasColumnType("nvarchar")
-                                .HasColumnName("street");
-
-                            b1.Property<string>("ZipCode")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar")
-                                .HasColumnName("zip_code");
-
-                            b1.HasKey("ApplicationUserId");
-
-                            b1.ToTable("application_user");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ApplicationUserId");
-                        });
-
-                    b.Navigation("Address")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ServiceHub.Domain.Entities.Provider", b =>

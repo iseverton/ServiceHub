@@ -13,7 +13,7 @@ public class ServiceCategoryConfiguration : IEntityTypeConfiguration<ServiceCate
 {
     public void Configure(EntityTypeBuilder<ServiceCategory> builder)
     {
-        builder.ToTable("service_category");
+        builder.ToTable("service_categories");
         builder.HasKey(sc => sc.Id);
 
         builder.Property(sc => sc.Id)

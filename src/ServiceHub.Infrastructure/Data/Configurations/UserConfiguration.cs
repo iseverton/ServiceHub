@@ -13,7 +13,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("user");
+        builder.ToTable("users");
         builder.HasKey(u => u.Id);
 
         builder.Property(u => u.Id)
@@ -22,13 +22,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .ValueGeneratedOnAdd()
             .IsRequired();
 
+        builder.Property(u => u.Name)
+           .HasColumnType("nvarchar(100)")
+           .HasColumnName("name")
+           .IsRequired();
+
         builder.HasOne(u => u.ApplicationUser)
             .WithOne()
             .HasForeignKey<User>(u => u.ApplicationUserId)
             .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("FK_User_ApplicationUser");
-
-
 
 
         builder.HasMany(u => u.CustomServices)

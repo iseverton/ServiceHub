@@ -13,7 +13,7 @@ public class CustomServiceRequestConfiguration : IEntityTypeConfiguration<Custom
 {
     public void Configure(EntityTypeBuilder<CustomServiceRequest> builder)
     {
-        builder.ToTable("custom_service_request");
+        builder.ToTable("custom_service_requests");
         builder.HasKey(c => c.Id);
         
         builder.Property(c => c.Id)
@@ -43,7 +43,12 @@ public class CustomServiceRequestConfiguration : IEntityTypeConfiguration<Custom
             .HasColumnType("int")
             .HasColumnName("status")
             .IsRequired();
-        
+
+        builder.Property(c => c.Budget)
+            .HasPrecision(18, 2)
+            .HasColumnName("budget")
+            .IsRequired();
+
         builder.Property(c => c.CreatedAt)
             .IsRequired()
             .HasColumnType("datetime")

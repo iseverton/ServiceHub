@@ -3,29 +3,19 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ServiceHub.Infrastructure.Migrations
+namespace ServiceHub.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class NomeDaMigration : Migration
+    public partial class first : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "application_user",
+                name: "application_users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    first_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    last_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    street = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    number = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    neighborhood = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    city = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    state = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    zip_code = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    complement = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime", nullable: false),
                     last_updated_at = table.Column<DateTime>(type: "datetime", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -45,7 +35,7 @@ namespace ServiceHub.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_application_user", x => x.Id);
+                    table.PrimaryKey("PK_application_users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -63,7 +53,7 @@ namespace ServiceHub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "service_category",
+                name: "service_categories",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -72,7 +62,7 @@ namespace ServiceHub.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_service_category", x => x.id);
+                    table.PrimaryKey("PK_service_categories", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,9 +79,9 @@ namespace ServiceHub.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_application_user_UserId",
+                        name: "FK_AspNetUserClaims_application_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "application_user",
+                        principalTable: "application_users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -109,9 +99,9 @@ namespace ServiceHub.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_AspNetUserLogins_application_user_UserId",
+                        name: "FK_AspNetUserLogins_application_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "application_user",
+                        principalTable: "application_users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -129,46 +119,48 @@ namespace ServiceHub.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_AspNetUserTokens_application_user_UserId",
+                        name: "FK_AspNetUserTokens_application_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "application_user",
+                        principalTable: "application_users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "provider",
+                name: "providers",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    description = table.Column<string>(type: "nvarchar(200)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_provider", x => x.id);
+                    table.PrimaryKey("PK_providers", x => x.id);
                     table.ForeignKey(
-                        name: "FK_provider_application_user_ApplicationUserId",
+                        name: "FK_providers_application_users_ApplicationUserId",
                         column: x => x.ApplicationUserId,
-                        principalTable: "application_user",
+                        principalTable: "application_users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "user",
+                name: "users",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     ApplicationUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_user", x => x.id);
+                    table.PrimaryKey("PK_users", x => x.id);
                     table.ForeignKey(
                         name: "FK_User_ApplicationUser",
                         column: x => x.ApplicationUserId,
-                        principalTable: "application_user",
+                        principalTable: "application_users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -211,46 +203,46 @@ namespace ServiceHub.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_application_user_UserId",
+                        name: "FK_AspNetUserRoles_application_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "application_user",
+                        principalTable: "application_users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "service",
+                name: "services",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProviderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     status = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime", nullable: false),
                     last_updated_at = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_service", x => x.id);
+                    table.PrimaryKey("PK_services", x => x.id);
                     table.ForeignKey(
                         name: "FK_Service_Provider",
                         column: x => x.ProviderId,
-                        principalTable: "provider",
+                        principalTable: "providers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "custom_service_request",
+                name: "custom_service_requests",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     user_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    Budget = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    budget = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     status = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime", nullable: false),
@@ -258,17 +250,17 @@ namespace ServiceHub.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_custom_service_request", x => x.id);
+                    table.PrimaryKey("PK_custom_service_requests", x => x.id);
                     table.ForeignKey(
                         name: "FK_CustomServiceRequest_User",
                         column: x => x.user_id,
-                        principalTable: "user",
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "booking",
+                name: "bookings",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -281,23 +273,23 @@ namespace ServiceHub.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_booking", x => x.id);
+                    table.PrimaryKey("PK_bookings", x => x.id);
                     table.ForeignKey(
-                        name: "FK_booking_provider_provider_id",
+                        name: "FK_bookings_providers_provider_id",
                         column: x => x.provider_id,
-                        principalTable: "provider",
+                        principalTable: "providers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_booking_service_service_id",
+                        name: "FK_bookings_services_service_id",
                         column: x => x.service_id,
-                        principalTable: "service",
+                        principalTable: "services",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_booking_user_client_id",
+                        name: "FK_bookings_users_client_id",
                         column: x => x.client_id,
-                        principalTable: "user",
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -315,13 +307,13 @@ namespace ServiceHub.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_ServiceCategory_Category",
                         column: x => x.category_id,
-                        principalTable: "service_category",
+                        principalTable: "service_categories",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ServiceCategory_Service",
                         column: x => x.service_id,
-                        principalTable: "service",
+                        principalTable: "services",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -344,39 +336,39 @@ namespace ServiceHub.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Service_reviews", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Service_reviews_booking_BookingId",
+                        name: "FK_Service_reviews_bookings_BookingId",
                         column: x => x.BookingId,
-                        principalTable: "booking",
+                        principalTable: "bookings",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Service_reviews_provider_ProviderId",
+                        name: "FK_Service_reviews_providers_ProviderId",
                         column: x => x.ProviderId,
-                        principalTable: "provider",
+                        principalTable: "providers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Service_reviews_service_ServiceId",
+                        name: "FK_Service_reviews_services_ServiceId",
                         column: x => x.ServiceId,
-                        principalTable: "service",
+                        principalTable: "services",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Service_reviews_user_UserId",
+                        name: "FK_Service_reviews_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "user",
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                table: "application_user",
+                table: "application_users",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                table: "application_user",
+                table: "application_users",
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
@@ -409,35 +401,30 @@ namespace ServiceHub.Infrastructure.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_booking_client_id",
-                table: "booking",
+                name: "IX_bookings_client_id",
+                table: "bookings",
                 column: "client_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_booking_provider_id",
-                table: "booking",
+                name: "IX_bookings_provider_id",
+                table: "bookings",
                 column: "provider_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_booking_service_id",
-                table: "booking",
+                name: "IX_bookings_service_id",
+                table: "bookings",
                 column: "service_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_custom_service_request_user_id",
-                table: "custom_service_request",
+                name: "IX_custom_service_requests_user_id",
+                table: "custom_service_requests",
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_provider_ApplicationUserId",
-                table: "provider",
+                name: "IX_providers_ApplicationUserId",
+                table: "providers",
                 column: "ApplicationUserId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_service_ProviderId",
-                table: "service",
-                column: "ProviderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Service_reviews_BookingId",
@@ -466,8 +453,13 @@ namespace ServiceHub.Infrastructure.Migrations
                 column: "service_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_user_ApplicationUserId",
-                table: "user",
+                name: "IX_services_ProviderId",
+                table: "services",
+                column: "ProviderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_ApplicationUserId",
+                table: "users",
                 column: "ApplicationUserId",
                 unique: true);
         }
@@ -491,7 +483,7 @@ namespace ServiceHub.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "custom_service_request");
+                name: "custom_service_requests");
 
             migrationBuilder.DropTable(
                 name: "Service_reviews");
@@ -503,22 +495,22 @@ namespace ServiceHub.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "booking");
+                name: "bookings");
 
             migrationBuilder.DropTable(
-                name: "service_category");
+                name: "service_categories");
 
             migrationBuilder.DropTable(
-                name: "service");
+                name: "services");
 
             migrationBuilder.DropTable(
-                name: "user");
+                name: "users");
 
             migrationBuilder.DropTable(
-                name: "provider");
+                name: "providers");
 
             migrationBuilder.DropTable(
-                name: "application_user");
+                name: "application_users");
         }
     }
 }

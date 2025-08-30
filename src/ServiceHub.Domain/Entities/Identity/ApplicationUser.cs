@@ -10,21 +10,21 @@ namespace ServiceHub.Domain.Entities.Identity;
 
 public class ApplicationUser : IdentityUser<Guid>
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public Address Address { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime LastUpdatedAt { get; set; }
 
-    public ApplicationUser(string firstName, string lastName, Address address)
+    public ApplicationUser(string email,string? phone)
     {
         Id = Guid.NewGuid();
-        FirstName = firstName;
-        LastName = lastName;
-        Address = address;
+        Email = email;
+        UserName = email;
+        PhoneNumber = phone;
         CreatedAt = DateTime.UtcNow;
+        LastUpdatedAt = DateTime.UtcNow;
     }
     public ApplicationUser()
     {
+        CreatedAt = DateTime.UtcNow;
+        LastUpdatedAt = DateTime.UtcNow;
     }
 }

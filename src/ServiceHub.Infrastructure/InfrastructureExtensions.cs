@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols;
-using Microsoft.AspNetCore.Identity; // <- ADICIONE ESTA LINHA
+using Microsoft.AspNetCore.Identity;
 using ServiceHub.Domain.Entities.Identity;
 using ServiceHub.Infrastructure.Data;
 using System;
@@ -10,18 +10,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using ServiceHub.Domain.Interfaces.Repositories;
+using ServiceHub.Infrastructure.Data.Repositories;
 
 namespace ServiceHub.Infrastructure;
 
 public static class InfrastructureExtensions
 {
+
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // Configuracao do banco de dados
-        var connectionString = configuration.GetConnectionString("Server=EVERTON;Database=service_hub;Trusted_Connection=True;TrustServerCertificate=True");
+        var connectionString = configuration.GetConnectionString("ServiceHubDatabase");
+       
+
         services.AddDbContext<ServiceHubDbContext>(options =>
         {
-            options.UseSqlServer("Server=EVERTON;Database=service_hub;Trusted_Connection=True;TrustServerCertificate=True");
+            options.UseSqlServer(connectionString);
         });
 
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -38,9 +43,10 @@ public static class InfrastructureExtensions
         .AddEntityFrameworkStores<ServiceHubDbContext>()
         .AddDefaultTokenProviders();
 
-        
-     
+        services.AddScoped<IUserRepository,UserRepository>();
 
+
+        Console.WriteLine("Registrado a injecao de infra");
         return services;
     }
 }

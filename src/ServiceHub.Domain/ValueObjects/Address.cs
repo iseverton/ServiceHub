@@ -17,7 +17,7 @@ public record class Address
     public string Country { get; set; }
     public string? Complement { get; set; }
 
-    public Address(string street, string number, string neighborhood, string city, string state, string zipCode, string country)
+    public Address(string street, string number, string neighborhood, string city, string state, string zipCode, string country, string? complement)
     {
         Street = street;
         Number = number;
@@ -26,6 +26,7 @@ public record class Address
         State = state;
         ZipCode = zipCode;
         Country = country;
+        Complement = complement;
     }
     public Address()
     {

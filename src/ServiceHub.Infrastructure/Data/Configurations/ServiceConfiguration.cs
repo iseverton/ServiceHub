@@ -13,7 +13,7 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 {
     public void Configure(EntityTypeBuilder<Service> builder)
     {
-        builder.ToTable("service");
+        builder.ToTable("services");
         builder.HasKey(s => s.Id);
 
         builder.Property(s => s.Id)
@@ -36,7 +36,7 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 
         builder.Property(s => s.Price)
             .IsRequired()
-            .HasColumnType("decimal(18,2)")
+            .HasPrecision(18, 2)
             .HasColumnName("price");
 
         builder.Property(s => s.Status)

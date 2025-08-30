@@ -13,7 +13,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 {
     public void Configure(EntityTypeBuilder<Booking> builder)
     {
-        builder.ToTable("booking");
+        builder.ToTable("bookings");
         builder.HasKey(b => b.Id);
 
         builder.Property(b => b.Id)
