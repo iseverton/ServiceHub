@@ -12,5 +12,15 @@ public class ServiceCategory
     public string Name { get; set; }
     public string Description { get; set; }
     public ICollection<Service> Services { get; set; }
-    public ServiceCategory() { }
+    public ServiceCategory(string name, string description) 
+    {
+        Id = Guid.NewGuid();
+        Name = name;
+        Description = description;
+        Services = new List<Service>();
+    }
+
+    public ServiceCategory()
+    {
+    }
 }
