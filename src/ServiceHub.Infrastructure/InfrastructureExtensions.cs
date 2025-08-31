@@ -1,20 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using ServiceHub.Application.Services.Interfaces;
 using ServiceHub.Domain.Entities.Identity;
+using ServiceHub.Domain.Interfaces.Repositories;
 using ServiceHub.Infrastructure.Data;
+using ServiceHub.Infrastructure.Data.Repositories;
+using ServiceHub.Infrastructure.Services.Auth;
+using ServiceHub.Infrastructure.Services.Jwt;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using ServiceHub.Domain.Interfaces.Repositories;
-using ServiceHub.Infrastructure.Data.Repositories;
-using ServiceHub.Application.Services.Interfaces;
-using ServiceHub.Infrastructure.Services.Auth;
 
 namespace ServiceHub.Infrastructure;
 
@@ -54,6 +57,34 @@ public static class InfrastructureExtensions
         services.AddScoped<IAuthService,AuthService>();
 
 
+        // JWt
+
+        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+        var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+
+
+        services.AddAuthentication(opt =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(jwt =>
+        {
+            var key = Encoding.ASCII.GetBytes(configuration["JwtSettings:Secret"]);
+
+            jwt.TokenValidationParameters = new TokenValidationParameters 
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = true,
+                ValidIssuer = jwtSettings.Issuer,
+                ValidateAudience = true,
+                ValidAudience = jwtSettings.Audience,
+                ValidateLifetime = true,
+            };
+        });
+        
+        
+        
         Console.WriteLine("Registrado a injecao de infra");
         return services;
     }
