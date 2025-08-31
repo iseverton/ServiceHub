@@ -52,6 +52,7 @@ public static class InfrastructureExtensions
         services.AddScoped<IUserRepository,UserRepository>();
         services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
         services.AddScoped<IProviderRepository, ProviderRepository>();
+        services.AddScoped<IServiceCategoryRepository, ServiceCategoryRepository>();
 
         // Services
         services.AddScoped<IAuthService,AuthService>();
@@ -59,7 +60,6 @@ public static class InfrastructureExtensions
 
 
         // JWt
-
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
