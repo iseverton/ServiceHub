@@ -13,7 +13,7 @@ namespace ServiceHub.Application.Services.Interfaces;
 /// </summary>
 public interface IAuthService 
 {
-    Task<string> Login();
+    Task<ApplicationUser?> Login(string email, string password);
 
     /// <summary>
     /// Metado responsavel por registrar um novo usuario de identidade

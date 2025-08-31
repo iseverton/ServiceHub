@@ -18,15 +18,21 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IApplicationUserRepository _applicationUserRepository;
-    public AuthService(UserManager<ApplicationUser> userManager,IApplicationUserRepository applicationUserRepository)
+    public AuthService(UserManager<ApplicationUser> userManager, IApplicationUserRepository applicationUserRepository)
     {
         _userManager = userManager;
         _applicationUserRepository = applicationUserRepository;
     }
 
-    public Task<string> Login()
+    public async Task<ApplicationUser?> Login(string email, string password)
     {
-        throw new NotImplementedException();
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null) return null;
+
+        var result = await _userManager.CheckPasswordAsync(user, password);
+        if (!result) return null;
+
+        return user; 
     }
 
     public async Task<ResultRegisterIdentityDTO> Register(string email, string phone, string password)

@@ -92,6 +92,14 @@ public static class ApiResponseHelpers
         Data = default
     };
 
+    public static ApiResponse<T> Unauthorized<T>(string message = "Unauthorized") => new ApiResponse<T>
+    {
+        Success = false,
+        Title = "Unauthorized",
+        Message = message,
+        StatusCode = 401,
+        Data = default
+    };
 
     public class ApiResponse
     {

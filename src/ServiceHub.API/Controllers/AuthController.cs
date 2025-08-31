@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using ServiceHub.Application.Commands.Auth;
 using ServiceHub.Application.Commands.Providers;
 using ServiceHub.Application.Commands.Users;
 using System.Threading.Tasks;
@@ -25,6 +26,13 @@ public class AuthController : ControllerBase
 
     [HttpPost("register-provider")]
     public async Task<IActionResult> RegisterProvider(RegisterProviderCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginCommand command)
     {
         var result = await _mediator.Send(command);
         return StatusCode(result.StatusCode, result);

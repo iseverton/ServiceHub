@@ -23,7 +23,7 @@ public class JwtTokenService : IJwtTokenService
         _logger = logger;
     }
 
-    public string GenerateToken(ApplicationUser applicationUser)
+    public async Task<string> GenerateToken(ApplicationUser applicationUser)
     {
         _logger.LogInformation("Starting JWT token generation for user ID: {UserId}", applicationUser.Id);
 

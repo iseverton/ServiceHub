@@ -55,6 +55,7 @@ public static class InfrastructureExtensions
 
         // Services
         services.AddScoped<IAuthService,AuthService>();
+        services.AddScoped<IJwtTokenService,JwtTokenService>();
 
 
         // JWt

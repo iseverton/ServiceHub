@@ -9,5 +9,5 @@ namespace ServiceHub.Application.Services.Interfaces;
 
 public interface IJwtTokenService
 {
-    string GenerateToken(ApplicationUser applicationUser);
+    Task<string> GenerateToken(ApplicationUser applicationUser);
 }
