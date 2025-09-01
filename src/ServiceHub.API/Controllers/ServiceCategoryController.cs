@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ServiceHub.Application.Commands.ServiceCategory;
+using ServiceHub.Application.DTOS.ServiceCategoryDTOS;
+using ServiceHub.Application.Queries.ServiceCategories;
 
 namespace ServiceHub.API.Controllers;
 
@@ -15,6 +17,15 @@ public class ServiceCategoryController : ControllerBase
         _logger = logger;
         _mediator = mediator;
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllServiceCategories()
+    {
+        var response = await _mediator.Send(new GetAllServiceCategoriesQuery());
+        return StatusCode(response.StatusCode,response);
+    }
+
+
     [HttpPost]
     public async Task<IActionResult> CreateServiceCategory(CreateServiceCategoryCommand command)
     {
