@@ -1,8 +1,10 @@
-﻿<div style="text-align:center;">
+﻿<div style="text-align: center;">
   <h1>ServiceHub – Marketplace de Serviços</h1>
+
   <p>
-   <img src="https://img.shields.io/badge/Status-Em%20Construção-orange" alt="Em Construção"/>
-</p>
+    <img src="https://img.shields.io/badge/Status-Em%20Construção-orange" alt="Em Construção"/>
+  </p>
+
   <p>
     <img src="https://img.shields.io/badge/ASP.NET%20Core-9.0-blue" alt="ASP.NET Core"/>
     <img src="https://img.shields.io/badge/Entity%20Framework-Core-green" alt="Entity Framework Core"/>
@@ -104,7 +106,7 @@
 
 <p align = "center">
   <a href= "#usuarios">👥 Estrutura de Usuários</a> |
-  <a href= "#x">X</a>
+  <a href= "#provider">Provider</a>
 </p>
 
 <h2 id="usuarios">👥 Estrutura de Usuários</h2>
@@ -140,3 +142,21 @@
   <li>Todos os dados sensíveis de autenticação ficam no ApplicationUser, garantindo segurança e consistência.</li>
 </ol>
 
+<hr/>
+
+<h2 id="provider">🛠️ Provider</h2>
+<p>O <strong>Provider</strong> é a entidade que representa os prestadores de serviços na plataforma ServiceHub.</p>
+
+<h3>📋 Lista de Serviços</h3>
+<p>Cada <strong>Provider</strong> possui uma ou mais ofertas de serviços que podem ser contratadas por clientes. 
+Cada serviço é associado a uma <em>categoria</em> e contém informações como preço, descrição detalhada e disponibilidade. 
+Além disso, cada serviço possui um sistema de <strong>reviews</strong>, permitindo que clientes avaliem e comentem sobre a qualidade do serviço prestado.</p>
+
+<h3>⚙️ Funcionalidades</h3>
+<ul>
+  <li>Gerenciar seus serviços (criar, editar ou remover).</li>
+  <li>Responder solicitações de clientes.</li>
+  <li>Definir agenda e disponibilidade.</li>
+  <li>Receber e responder propostas.</li>
+  <li>Manter e melhorar sua reputação por meio de avaliações positivas.</li>
+</ul>
