@@ -12,10 +12,13 @@ using ServiceHub.Domain.Interfaces.Repositories;
 using ServiceHub.Infrastructure.Data;
 using ServiceHub.Infrastructure.Data.Repositories;
 using ServiceHub.Infrastructure.Services.Auth;
+using ServiceHub.Infrastructure.Services.Email;
 using ServiceHub.Infrastructure.Services.Jwt;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +36,8 @@ public static class InfrastructureExtensions
         {
             options.UseSqlServer(connectionString);
         });
+
+        // Identity
 
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
         {
@@ -57,12 +62,12 @@ public static class InfrastructureExtensions
         // Services
         services.AddScoped<IAuthService,AuthService>();
         services.AddScoped<IJwtTokenService,JwtTokenService>();
+        services.AddScoped<IEmailService, EmailService>();
 
 
         // JWt
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
-
 
         services.AddAuthentication(opt =>
         {
@@ -83,10 +88,22 @@ public static class InfrastructureExtensions
                 ValidateLifetime = true,
             };
         });
+
+        // Fluent Email
+        var emailSettings = configuration.GetSection("EmailSettings").Get<EmailSettings>();
         
-        
-        
+        var smtpClient = new SmtpClient()
+        {
+            Port = emailSettings.Port,
+            Host = emailSettings.Host,
+            EnableSsl = emailSettings.EnableSsl,
+            Credentials = new NetworkCredential(emailSettings.Username, emailSettings.Password)
+        };
+
+        services.AddFluentEmail(emailSettings.Username)
+            .AddSmtpSender(smtpClient);
+
         Console.WriteLine("Registrado a injecao de infra");
         return services;
     }
-}
+} 
