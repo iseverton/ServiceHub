@@ -53,16 +53,9 @@ public static class InfrastructureExtensions
         .AddEntityFrameworkStores<ServiceHubDbContext>()
         .AddDefaultTokenProviders();
 
-        // Repositories
-        services.AddScoped<IUserRepository,UserRepository>();
-        services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-        services.AddScoped<IProviderRepository, ProviderRepository>();
-        services.AddScoped<IServiceCategoryRepository, ServiceCategoryRepository>();
-
-        // Services
-        services.AddScoped<IAuthService,AuthService>();
-        services.AddScoped<IJwtTokenService,JwtTokenService>();
-        services.AddScoped<IEmailService, EmailService>();
+        services
+            .AddRepositories()
+            .AddServices();
 
 
         // JWt
@@ -106,4 +99,25 @@ public static class InfrastructureExtensions
         Console.WriteLine("Registrado a injecao de infra");
         return services;
     }
+
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+        services.AddScoped<IProviderRepository, ProviderRepository>();
+        services.AddScoped<IServiceCategoryRepository, ServiceCategoryRepository>();
+        
+        return services;
+    }
+
+    public static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IEmailService, EmailService>();
+
+        return services;
+    }
+
+
 } 
