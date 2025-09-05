@@ -1,0 +1,6 @@
+services:
+  servicehub.api:
+    image: ${DOCKER_REGISTRY-}servicehubapi
+    build:
+      context: .
+      dockerfile: src/ServiceHub.API/Dockerfile
