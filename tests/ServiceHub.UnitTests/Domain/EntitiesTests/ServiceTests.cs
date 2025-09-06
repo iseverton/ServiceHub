@@ -38,4 +38,5 @@ public class ServiceTests
         service.CreatedAt.ShouldBeLessThanOrEqualTo(DateTime.UtcNow);
         service.Status.ShouldBe(EServiceStatus.Active);
     }
+    
 }
