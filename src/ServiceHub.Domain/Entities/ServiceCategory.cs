@@ -20,7 +20,7 @@ public class ServiceCategory
         Services = new List<Service>();
     }
 
-    public ServiceCategory()
+    protected ServiceCategory()
     {
     }
 }

@@ -15,25 +15,28 @@ public class Service
     public string Description { get; set; }
     public decimal Price { get; set; }
     public ICollection<ServiceCategory> Categories { get; set; }
-    public ICollection<ServiceReview>? ServiceReviews  { get; set; }
+    public ICollection<ServiceReview> ServiceReviews  { get; set; }
     public EServiceStatus Status { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime LastUpdatedAt { get; set; }
-
     public Provider Provider { get; set; }
     public ICollection<Booking> Bookings { get; set; }
 
-    public Service(Guid providerId, string title, string description, decimal price, EServiceStatus status)
+    public Service(string title, string description, decimal price, ICollection<ServiceCategory> serviceCategories ,Guid providerId)
     {
+        Id = Guid.NewGuid();
         ProviderId = providerId;
         Title = title;
         Description = description;
         Price = price;
-        Categories = new List<ServiceCategory>();
-        Status = status;
+        Categories = serviceCategories;
+        ServiceReviews = new List<ServiceReview>();
+        CreatedAt = DateTime.UtcNow;
+        LastUpdatedAt = DateTime.UtcNow;
+        Status = EServiceStatus.Active;
     }
 
-    public Service()
+    protected Service()
     {
         
     }
