@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceHub.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using ServiceHub.Infrastructure.Data;
 namespace ServiceHub.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ServiceHubDbContext))]
-    partial class ServiceHubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250906013205_CreateProviderSchedule")]
+    partial class CreateProviderSchedule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

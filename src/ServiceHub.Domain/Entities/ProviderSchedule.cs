@@ -25,4 +25,6 @@ public class ProviderSchedule
         ProviderId = provider;
         IsActive = true;
     }
+
+    protected ProviderSchedule() { }
 }
