@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.Extensions.Logging;
 using ServiceHub.Application.Commands.Users;
 using ServiceHub.Application.Services.Interfaces;
 using ServiceHub.Domain.Entities;
@@ -19,23 +20,33 @@ namespace ServiceHub.Application.Handlers.Users;
 
 public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, ApiResponse<Guid?>>
 {
+    private readonly ILogger<RegisterUserCommandHandler> _logger;
     private readonly IUserRepository _userRepository;
     private readonly IAuthService _authService;
-    public RegisterUserCommandHandler(IUserRepository userRepository,IAuthService authService)
+    public RegisterUserCommandHandler(ILogger<RegisterUserCommandHandler> logger, IUserRepository userRepository, IAuthService authService)
     {
+        _logger = logger;
         _authService = authService;
         _userRepository = userRepository;
     }
 
     public async Task<ApiResponse<Guid?>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-       
+
         // criar o usuario de identidade
+        _logger.LogInformation("Starting ApplicationUser registration for email: {Email}", request.Email);
+
         var resultRegisterIdentity = await _authService.
             Register(request.Email, request.PhoneNumber, request.Password);
-        
-        if (!resultRegisterIdentity.Succeeded) return ApiResponseHelpers.
+
+        if (!resultRegisterIdentity.Succeeded) 
+        {
+            _logger.LogWarning("Failed to register ApplicationUser for email: {Email}. Errors: {Errors}",
+                request.Email, string.Join(", ", resultRegisterIdentity.Errors));
+           
+            return ApiResponseHelpers.
                 BadRequest<Guid?>(string.Join(", ", resultRegisterIdentity.Errors));
+        } 
 
         // criar o usuario do dominio
         User user = new User(resultRegisterIdentity.ApplicationUser, request.Name);

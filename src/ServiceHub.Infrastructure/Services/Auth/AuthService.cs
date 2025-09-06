@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using ServiceHub.Application.DTOS;
 using ServiceHub.Application.Services.Interfaces;
 using ServiceHub.Domain.Entities.Identity;
@@ -16,10 +17,12 @@ namespace ServiceHub.Infrastructure.Services.Auth;
 
 public class AuthService : IAuthService
 {
+    private readonly ILogger<AuthService> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IApplicationUserRepository _applicationUserRepository;
-    public AuthService(UserManager<ApplicationUser> userManager, IApplicationUserRepository applicationUserRepository)
+    public AuthService(ILogger<AuthService> logger, UserManager<ApplicationUser> userManager, IApplicationUserRepository applicationUserRepository)
     {
+        _logger = logger;
         _userManager = userManager;
         _applicationUserRepository = applicationUserRepository;
     }
@@ -59,6 +62,12 @@ public class AuthService : IAuthService
         // criar o usuario de identidade
         ApplicationUser applicationUser = new ApplicationUser(email, phone);
         var result = await _userManager.CreateAsync(applicationUser, password);
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Failed to register ApplicationUser for email: {Email}. Errors: {Errors}",
+                email, string.Join(", ", result.Errors.Select(e => e.Description)));
+        }
+
         return new ResultRegisterIdentityDTO
         {
             ApplicationUser = result.Succeeded ? applicationUser : null,
