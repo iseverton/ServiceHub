@@ -106,7 +106,10 @@ public static class InfrastructureExtensions
         services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
         services.AddScoped<IProviderRepository, ProviderRepository>();
         services.AddScoped<IServiceCategoryRepository, ServiceCategoryRepository>();
-        
+        services.AddScoped<IServiceRepository,ServiceRepository>();
+        services.AddScoped<IServiceCategoryRepository, ServiceCategoryRepository>();
+        services.AddScoped<IProviderScheduleRepository, ProviderScheduleRepository>();
+
         return services;
     }
 

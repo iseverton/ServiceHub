@@ -1,4 +1,5 @@
-﻿using ServiceHub.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ServiceHub.Domain.Entities;
 using ServiceHub.Domain.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,10 @@ public class ServiceCategoryRepository : BaseRepository<ServiceCategory>, IServi
 {
     public ServiceCategoryRepository(ServiceHubDbContext context) : base(context)
     {
+    }
+
+    public async Task<ICollection<ServiceCategory>> GetAllById(ICollection<Guid> categories, CancellationToken cancellationToken)
+    {
+       return await _dbSet.Where(c => categories.Contains(c.Id)).ToListAsync(cancellationToken);
     }
 }
