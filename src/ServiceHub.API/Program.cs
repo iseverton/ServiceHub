@@ -1,10 +1,22 @@
 using Serilog;
+using Serilog.Enrichers.CallerInfo;
+using Serilog.Events;
 using ServiceHub.Application.Handlers.Users;
 using ServiceHub.Infrastructure;
 
 // Configuracao do Serilog
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
+    .Enrich.WithProperty("App", "ServiceHub")
+    .Enrich.WithCallerInfo(
+        includeFileInfo: true,
+        allowedAssemblies: new List<string> { "ServiceHub.API", "ServiceHub.Application" },
+        prefix: "myprefix_")
+    .WriteTo.Console(
+    outputTemplate: "{Timestamp:HH:mm} [{Level}] ({ThreadId}) {Message} {myprefix_Method} {myprefix_File} {myprefix_LineNumber}{NewLine}{Exception}")
+
     .CreateLogger();
 
 try
@@ -25,7 +37,6 @@ try
 
     builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommandHandler).Assembly));
 
-    
     
     
     var app = builder.Build();
