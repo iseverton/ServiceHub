@@ -1,6 +1,8 @@
+using FluentValidation;
 using Serilog;
 using Serilog.Enrichers.CallerInfo;
 using Serilog.Events;
+using ServiceHub.Application.Commands.Users.Validations;
 using ServiceHub.Application.Handlers.Users;
 using ServiceHub.Infrastructure;
 
@@ -37,8 +39,9 @@ try
 
     builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommandHandler).Assembly));
 
-    
-    
+    builder.Services
+    .AddValidatorsFromAssemblyContaining<RegisterUserCommandValidation>();
+
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
