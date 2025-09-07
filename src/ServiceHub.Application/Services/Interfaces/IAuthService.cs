@@ -19,6 +19,7 @@ public interface IAuthService
     /// Metado responsavel por registrar um novo usuario de identidade
     /// </summary>
     Task<ResultRegisterIdentityDTO> Register(string email,string phone,string password);
+    Task<bool> ConfirmEmail(ApplicationUser user);
     Task ResetPassword();
 
 }

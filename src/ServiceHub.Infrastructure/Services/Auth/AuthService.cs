@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using ServiceHub.Application.DTOS;
 using ServiceHub.Application.Services.Interfaces;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ServiceHub.Infrastructure.Services.Auth;
@@ -20,11 +22,29 @@ public class AuthService : IAuthService
     private readonly ILogger<AuthService> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IApplicationUserRepository _applicationUserRepository;
-    public AuthService(ILogger<AuthService> logger, UserManager<ApplicationUser> userManager, IApplicationUserRepository applicationUserRepository)
+    private readonly IEmailService _emailService;
+    public AuthService(ILogger<AuthService> logger, UserManager<ApplicationUser> userManager, 
+        IApplicationUserRepository applicationUserRepository, IEmailService emailService)
     {
         _logger = logger;
         _userManager = userManager;
         _applicationUserRepository = applicationUserRepository;
+        _emailService = emailService;
+    }
+
+    public async Task<bool> ConfirmEmail(ApplicationUser user)
+    {
+        var ConfirmEmailtoken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        if (ConfirmEmailtoken == null)
+        {
+            _logger.LogWarning("Failed to generate email confirmation token for user with ID: {UserId}", user.Id);
+            return false;
+        }
+
+        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(ConfirmEmailtoken));
+        var url = $"http://localhost:7224/Auth/emailconfirmation?token={encodedToken}&email={user.Email}";
+        await _emailService.SendEmailAsync(user.Email,"Confirmação de email",url);
+        return true;
     }
 
     public async Task<ApplicationUser?> Login(string email, string password)

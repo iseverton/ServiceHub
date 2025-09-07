@@ -23,11 +23,14 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
     private readonly ILogger<RegisterUserCommandHandler> _logger;
     private readonly IUserRepository _userRepository;
     private readonly IAuthService _authService;
-    public RegisterUserCommandHandler(ILogger<RegisterUserCommandHandler> logger, IUserRepository userRepository, IAuthService authService)
+    private readonly IEmailService _emailService;
+    public RegisterUserCommandHandler(ILogger<RegisterUserCommandHandler> logger, 
+        IUserRepository userRepository, IAuthService authService, IEmailService emailService)
     {
         _logger = logger;
         _authService = authService;
         _userRepository = userRepository;
+        _emailService = emailService;
     }
 
     public async Task<ApiResponse<Guid?>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -52,7 +55,19 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
         User user = new User(resultRegisterIdentity.ApplicationUser, request.Name);
         await _userRepository.AddAsync(user, cancellationToken);
 
+        var emailConfirmationResult = await _authService.ConfirmEmail(resultRegisterIdentity.ApplicationUser);
+        if (!emailConfirmationResult)
+        {
+            _logger.LogWarning("Failed to send email confirmation for user with ID: {UserId}", user.Id);
+            return ApiResponseHelpers.
+                BadRequest<Guid?>("Failed to send email confirmation. Please try again later.");
+        }
+
+        _logger.LogInformation("Successfully registered User with ID: {UserId}", user.Id);
+
         return ApiResponseHelpers.Created<Guid?>(user.Id);
     }
-
+   
 }
+
+
