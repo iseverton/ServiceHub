@@ -25,6 +25,7 @@
     <ProjectReference Include="..\ServiceHub.Application\ServiceHub.Application.csproj" />
     <ProjectReference Include="..\ServiceHub.Domain\ServiceHub.Domain.csproj" />
     <ProjectReference Include="..\ServiceHub.Infrastructure\ServiceHub.Infrastructure.csproj" />
+    <ProjectReference Include="..\ServiceHub.Shared\ServiceHub.Shared.csproj" />
   </ItemGroup>
 
 </Project>

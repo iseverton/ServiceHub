@@ -11,5 +11,5 @@ namespace ServiceHub.Domain.Interfaces.Repositories;
 public interface IApplicationUserRepository
 {
     Task<ApplicationUser?> FindByPhoneAsync(string phoneNumber, CancellationToken cancellationToken);
-
+   
 }

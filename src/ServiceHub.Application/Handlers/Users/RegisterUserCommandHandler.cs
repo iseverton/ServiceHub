@@ -55,7 +55,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
         User user = new User(resultRegisterIdentity.ApplicationUser, request.Name);
         await _userRepository.AddAsync(user, cancellationToken);
 
-        var emailConfirmationResult = await _authService.ConfirmEmail(resultRegisterIdentity.ApplicationUser);
+        var emailConfirmationResult = await _authService.SendEmailConfirmationAsync(resultRegisterIdentity.ApplicationUser);
         if (!emailConfirmationResult)
         {
             _logger.LogWarning("Failed to send email confirmation for user with ID: {UserId}", user.Id);

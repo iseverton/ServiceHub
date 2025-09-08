@@ -109,6 +109,7 @@ public static class InfrastructureExtensions
         services.AddScoped<IServiceRepository,ServiceRepository>();
         services.AddScoped<IServiceCategoryRepository, ServiceCategoryRepository>();
         services.AddScoped<IProviderScheduleRepository, ProviderScheduleRepository>();
+        services.AddScoped<IEmailService, EmailService>();
 
         return services;
     }

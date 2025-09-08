@@ -23,7 +23,7 @@ public class AuthService : IAuthService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IApplicationUserRepository _applicationUserRepository;
     private readonly IEmailService _emailService;
-    public AuthService(ILogger<AuthService> logger, UserManager<ApplicationUser> userManager, 
+    public AuthService(ILogger<AuthService> logger, UserManager<ApplicationUser> userManager,
         IApplicationUserRepository applicationUserRepository, IEmailService emailService)
     {
         _logger = logger;
@@ -32,7 +32,7 @@ public class AuthService : IAuthService
         _emailService = emailService;
     }
 
-    public async Task<bool> ConfirmEmail(ApplicationUser user)
+    public async Task<bool> SendEmailConfirmationAsync(ApplicationUser user)
     {
         var ConfirmEmailtoken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         if (ConfirmEmailtoken == null)
@@ -42,8 +42,8 @@ public class AuthService : IAuthService
         }
 
         var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(ConfirmEmailtoken));
-        var url = $"http://localhost:7224/Auth/emailconfirmation?token={encodedToken}&email={user.Email}";
-        await _emailService.SendEmailAsync(user.Email,"Confirmação de email",url);
+        var url = $"http://localhost:7224/Auth/emailconfirmation?token={encodedToken}&id={user.Id}";
+        await _emailService.SendEmailAsync(user.Email, "Confirmação de email", url);
         return true;
     }
 
@@ -55,7 +55,7 @@ public class AuthService : IAuthService
         var result = await _userManager.CheckPasswordAsync(user, password);
         if (!result) return null;
 
-        return user; 
+        return user;
     }
 
     public async Task<ResultRegisterIdentityDTO> Register(string email, string phone, string password)
@@ -99,5 +99,23 @@ public class AuthService : IAuthService
     public Task ResetPassword()
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<bool> ConfirmEmailAsync(string userId, string token)
+    {
+        var existingUser = await _userManager.FindByIdAsync(userId);
+        if (existingUser == null) return false;
+
+        var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+
+        var result = await _userManager.ConfirmEmailAsync(existingUser, decodedToken);
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Email confirmation failed for user with ID: {UserId}. Errors: {Errors}",
+              userId, string.Join(", ", result.Errors.Select(e => e.Description)));
+            return false;
+        }
+
+        return true;
     }
 }
