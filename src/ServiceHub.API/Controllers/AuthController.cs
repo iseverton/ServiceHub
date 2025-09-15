@@ -5,9 +5,6 @@ using ServiceHub.API.Extensions;
 using ServiceHub.Application.Commands.Auth;
 using ServiceHub.Application.Commands.Providers;
 using ServiceHub.Application.Commands.Users;
-using ServiceHub.Shared.Utils;
-using System.Threading.Tasks;
-using static ServiceHub.Shared.Utils.ApiResponseHelpers;
 
 namespace ServiceHub.API.Controllers;
 
@@ -38,7 +35,7 @@ public class AuthController : ControllerBase
 
         var result = await _mediator.Send(command);
 
-        return StatusCode(result.StatusCode, result);
+        return Ok(result);
     }
 
     [HttpPost("register-provider")]
@@ -61,6 +58,6 @@ public class AuthController : ControllerBase
         var command = new EmailConfirmationCommand(token, userId);
         var result = await _mediator.Send(command,cancellationToken);
 
-        return StatusCode(result.StatusCode, result);
+        return Ok(result);
     }
 }

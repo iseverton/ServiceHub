@@ -1,24 +1,15 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.Extensions.Logging;
 using ServiceHub.Application.Commands.Users;
 using ServiceHub.Application.Services.Interfaces;
+using ServiceHub.Domain.Common;
 using ServiceHub.Domain.Entities;
-using ServiceHub.Domain.Entities.Identity;
 using ServiceHub.Domain.Interfaces.Repositories;
-using ServiceHub.Domain.ValueObjects;
 using ServiceHub.Shared.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static ServiceHub.Shared.Utils.ApiResponseHelpers;
 
 namespace ServiceHub.Application.Handlers.Users;
 
-public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, ApiResponse<Guid?>>
+public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result<Guid?>>
 {
     private readonly ILogger<RegisterUserCommandHandler> _logger;
     private readonly IUserRepository _userRepository;
@@ -33,7 +24,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
         _emailService = emailService;
     }
 
-    public async Task<ApiResponse<Guid?>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid?>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
 
         // criar o usuario de identidade
@@ -47,8 +38,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
             _logger.LogWarning("Failed to register ApplicationUser for email: {Email}. Errors: {Errors}",
                 request.Email, string.Join(", ", resultRegisterIdentity.Errors));
            
-            return ApiResponseHelpers.
-                BadRequest<Guid?>(string.Join(", ", resultRegisterIdentity.Errors));
+            return Result<Guid?>.Fail(resultRegisterIdentity.Errors);
         } 
 
         // criar o usuario do dominio
@@ -59,13 +49,12 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, A
         if (!emailConfirmationResult)
         {
             _logger.LogWarning("Failed to send email confirmation for user with ID: {UserId}", user.Id);
-            return ApiResponseHelpers.
-                BadRequest<Guid?>("Failed to send email confirmation. Please try again later.");
+            return Result<Guid?>.Fail("Failed to send email confirmation. Please try again later.");
         }
 
         _logger.LogInformation("Successfully registered User with ID: {UserId}", user.Id);
 
-        return ApiResponseHelpers.Created<Guid?>(user.Id);
+        return Result<Guid?>.Success(user.Id);
     }
    
 }
