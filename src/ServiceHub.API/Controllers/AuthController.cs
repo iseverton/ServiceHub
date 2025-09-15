@@ -14,7 +14,7 @@ public class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> _logger;
     private readonly IMediator _mediator;
-    public AuthController( ILogger<AuthController> logger ,IMediator mediator)
+    public AuthController(ILogger<AuthController> logger, IMediator mediator)
     {
         _logger = logger;
         _mediator = mediator;
@@ -35,6 +35,8 @@ public class AuthController : ControllerBase
 
         var result = await _mediator.Send(command);
 
+        if (!result.IsSuccess) return BadRequest(result);
+
         return Ok(result);
     }
 
@@ -42,7 +44,10 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> RegisterProvider(RegisterProviderCommand command)
     {
         var result = await _mediator.Send(command);
-        return StatusCode(result.StatusCode, result);
+
+        if (!result.IsSuccess) return BadRequest(result);
+
+        return Ok(result);
     }
 
     [HttpPost("login")]
@@ -53,10 +58,10 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("emailconfirmation")]
-    public async Task<IActionResult> EmailConfirmation([FromQuery] string token, [FromQuery] string userId,CancellationToken cancellationToken)
+    public async Task<IActionResult> EmailConfirmation([FromQuery] string token, [FromQuery] string userId, CancellationToken cancellationToken)
     {
         var command = new EmailConfirmationCommand(token, userId);
-        var result = await _mediator.Send(command,cancellationToken);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return Ok(result);
     }

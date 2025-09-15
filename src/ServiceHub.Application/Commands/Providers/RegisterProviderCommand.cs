@@ -1,14 +1,9 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static ServiceHub.Shared.Utils.ApiResponseHelpers;
+using ServiceHub.Domain.Common;
 
 namespace ServiceHub.Application.Commands.Providers;
 
-public class RegisterProviderCommand : IRequest<ApiResponse<Guid?>>
+public class RegisterProviderCommand : IRequest<Result<Guid?>>
 {
     public string Name { get; set; }
     public string Description { get; set; }
