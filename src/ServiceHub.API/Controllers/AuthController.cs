@@ -54,7 +54,10 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(LoginCommand command)
     {
         var result = await _mediator.Send(command);
-        return StatusCode(result.StatusCode, result);
+
+        if (!result.IsSuccess) return BadRequest(result);
+
+        return Ok(result);
     }
 
     [HttpGet("emailconfirmation")]
@@ -62,6 +65,8 @@ public class AuthController : ControllerBase
     {
         var command = new EmailConfirmationCommand(token, userId);
         var result = await _mediator.Send(command, cancellationToken);
+
+        if (!result.IsSuccess) return BadRequest(result);
 
         return Ok(result);
     }

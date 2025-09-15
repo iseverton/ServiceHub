@@ -1,14 +1,9 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static ServiceHub.Shared.Utils.ApiResponseHelpers;
+using ServiceHub.Domain.Common;
 
 namespace ServiceHub.Application.Commands.Auth;
 
-public class EmailConfirmationCommand : IRequest<ApiResponse>
+public class EmailConfirmationCommand : IRequest<Result<NoContent>>
 {
     public string Token { get; }
     public string UserId { get; }

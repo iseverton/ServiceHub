@@ -1,15 +1,9 @@
 ﻿using MediatR;
-using ServiceHub.Shared.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static ServiceHub.Shared.Utils.ApiResponseHelpers;
+using ServiceHub.Domain.Common;
 
 namespace ServiceHub.Application.Commands.Auth;
 
-public class LoginCommand : IRequest<ApiResponse<string>>
+public class LoginCommand : IRequest<Result<string>>
 {
     public string Email { get; set; }
     public string Password { get; set; }

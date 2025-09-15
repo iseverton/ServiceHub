@@ -1,17 +1,11 @@
 ﻿using MediatR;
 using ServiceHub.Application.Commands.Auth;
 using ServiceHub.Application.Services.Interfaces;
-using ServiceHub.Shared.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static ServiceHub.Shared.Utils.ApiResponseHelpers;
+using ServiceHub.Domain.Common;
 
 namespace ServiceHub.Application.Handlers.Auth;
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponse<string>>
+public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<string>>
 {
     private readonly IAuthService _authService;
     private readonly IJwtTokenService _jwtTokenService;
@@ -20,12 +14,12 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponse<str
         _authService = authService;
         _jwtTokenService = jwtTokenService;
     }
-    public async Task<ApiResponse<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var result = await _authService.Login(request.Email, request.Password);
-        if(result == null) return ApiResponseHelpers.Unauthorized<string>("Invalid email or password");
+        var result = await _authService.LoginAsync(request.Email, request.Password);
+        if(!result.Succeeded) return Result<string>.Fail(string.Join(", ", result.Errors));
 
-        var token = await _jwtTokenService.GenerateToken(result);
-        return ApiResponseHelpers.Ok<string>(token);
+        var token = await _jwtTokenService.GenerateToken(result.applicationUser);
+        return Result<string>.Success(token);
     }
 }
