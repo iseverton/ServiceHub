@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using ServiceHub.Application.DTOS;
+using ServiceHub.Application.DTOS.Auth;
 using ServiceHub.Application.Services.Interfaces;
 using ServiceHub.Domain.Entities.Identity;
 using ServiceHub.Domain.Interfaces.Repositories;
@@ -21,13 +21,15 @@ public class AuthService : IAuthService
 {
     private readonly ILogger<AuthService> _logger;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IApplicationUserRepository _applicationUserRepository;
     private readonly IEmailService _emailService;
     public AuthService(ILogger<AuthService> logger, UserManager<ApplicationUser> userManager,
-        IApplicationUserRepository applicationUserRepository, IEmailService emailService)
+        SignInManager<ApplicationUser> signInManager,IApplicationUserRepository applicationUserRepository, IEmailService emailService)
     {
         _logger = logger;
         _userManager = userManager;
+        _signInManager = signInManager;
         _applicationUserRepository = applicationUserRepository;
         _emailService = emailService;
     }
@@ -47,15 +49,59 @@ public class AuthService : IAuthService
         return true;
     }
 
-    public async Task<ApplicationUser?> Login(string email, string password)
+    public async Task<LoginResultDTO> LoginAsync(string email, string password)
     {
         var user = await _userManager.FindByEmailAsync(email);
-        if (user == null) return null;
+        
+        if (user == null) return new LoginResultDTO
+        {
+            Succeeded = false,
+            applicationUser = null,
+            Errors = new List<string> { "Invalid email or password" }
+        };
 
-        var result = await _userManager.CheckPasswordAsync(user, password);
-        if (!result) return null;
 
-        return user;
+        var result = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: true);
+
+        if (result.IsLockedOut)
+        {
+            _logger.LogWarning("User account locked out for email: {Email}", email);
+            return new LoginResultDTO
+            {
+                Succeeded = false,
+                applicationUser = null,
+                Errors = new List<string> { "User account is locked out" }
+            };
+        }
+
+
+        if (!result.Succeeded)
+        {
+           return new LoginResultDTO
+            {
+                Succeeded = false,
+                applicationUser = null,
+                Errors = new List<string> { "Invalid email or password" }
+            };
+        }
+        
+        if (!result.IsNotAllowed)
+        {
+            _logger.LogWarning("Login attempt failed: email not confirmed for user with email: {Email}", email);
+            return new LoginResultDTO
+            {
+                Succeeded = false,
+                applicationUser = null,
+                Errors = new List<string> { "Email not confirmed" }
+            };
+        }
+
+        return new LoginResultDTO
+        {
+            Succeeded = result.Succeeded,
+            applicationUser = user
+        };
+
     }
 
     public async Task<ResultRegisterIdentityDTO> Register(string email, string phone, string password)

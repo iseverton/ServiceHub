@@ -1,4 +1,4 @@
-﻿using ServiceHub.Application.DTOS;
+﻿using ServiceHub.Application.DTOS.Auth;
 using ServiceHub.Domain.Entities.Identity;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace ServiceHub.Application.Services.Interfaces;
 /// </summary>
 public interface IAuthService 
 {
-    Task<ApplicationUser?> Login(string email, string password);
+    Task<LoginResultDTO> LoginAsync(string email, string password);
 
     /// <summary>
     /// Metado responsavel por registrar um novo usuario de identidade
